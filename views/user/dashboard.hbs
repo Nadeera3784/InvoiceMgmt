@@ -1,0 +1,104 @@
+{{!-- Breadcrumbs & Page Header --}}
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        
+        <h4 class="page-title">Dashboard</h4>
+        <br> 
+        {{!-- <div class="hide-phone app-search">
+            <form role="search" class="" method="POST" action="/user/search" id="srchFrm">
+                <input type="text" placeholder="Search..." class="form-control" id="id" name="id" required>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}" id="token">
+                <a id="search" class="fa fa-search"></a>
+            </form>
+        </div>   --}}
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+
+        <div class="portlet"><!-- /primary heading -->
+            <div class="portlet-heading">
+                <h3 class="portlet-title text-dark text-uppercase">
+                    Recent Invoices
+                </h3>
+                <div class="portlet-widgets">
+                    <a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#portlet2"><i class="ion-minus-round"></i></a>
+                    <span class="divider"></span>
+                    <a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="portlet2" class="panel-collapse collapse show">
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mails m-0 table table-actions-bar">
+                            <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Amount</th>
+                                <th>Created By</th>
+                                <th>Invoice No</th>
+                                <th>Date</th>
+                                <th style="min-width: 90px;">Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                                {{!-- <tr><a class="btn btn-success waves-effect waves-light" href="javascript:;" onclick="$.Notification.confirm('success','top right', 'Do you want to save invoice?!')">Success</a></tr> --}}
+                                {{#if invoices}}
+                                    {{#each invoices}}
+                                        <tr class="active">
+                                            
+                                            <td>
+                                                {{this.name}}
+                                            </td>
+
+                                            <td>
+                                                {{this.grandTotal}}
+                                            </td>
+                                            <td>
+                                                {{this.created_by}}
+                                            </td>
+                                            <td>
+                                                {{this.invoiceId}}
+                                            </td>
+                                                    
+                                            <td>
+                                                {{this.date}}
+                                            </td>
+                                                                                                    
+                                            <td>
+                                                <a href="/user/view/{{this._id}}" class="table-action-btn"><i class="md md-pageview">view</i></a>
+                                                {{!-- <a href="#" class="table-action-btn"><i class="md md-close"></i></a> --}}
+                                            </td>
+                                        </tr>
+
+
+
+
+                                        
+
+
+
+
+                                    {{/each}} 
+                                {{/if}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+</div>
+
+           
+
+
+ 

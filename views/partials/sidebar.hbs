@@ -1,0 +1,48 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left side-menu">
+    <div class="sidebar-inner slimscrollleft">
+        <!--- Divider -->
+        <div id="sidebar-menu">
+            <ul>    
+                <li class="text-muted menu-title">Navigation</li>
+
+                <li class="has_sub">
+                    <a href="/user/dashboard" class="waves-effect"><i class="ti-home"></i> <span> Home </span></a>                                
+                </li>
+
+                <li class="has_sub">
+                    <a href="/create" class="waves-effect"><i class="ti-files"></i><span> New Invoice </span></a>                                
+                </li>    
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="ti-share"></i><span>View Invoices </span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        {{#if invoiceYears}}
+                            {{#each invoiceYears}}
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><span>{{this._id.year}}</span>  <span class="menu-arrow"></span></a>
+                            <ul style="">
+                                {{!-- <li><a href="/user/view/{{this._id.year}}/1"><span>January</span></a></li> --}}
+                                <li><a href="/user/view/{{this._id.year}}/2"><span>February</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/3"><span>March</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/4"><span>April</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/5"><span>May</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/6"><span>June</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/7"><span>July</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/8"><span>August</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/9"><span>September</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/10"><span>October</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/11"><span>November</span></a></li>
+                                <li><a href="/user/view/{{this._id.year}}/12"><span>December</span></a></li>
+                            </ul>
+                        </li>
+                            {{/each}}
+                        {{/if}}
+                    </ul>
+                </li>  
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- Left Sidebar End -->

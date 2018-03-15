@@ -1,0 +1,90 @@
+{{!-- Breadcrumbs & Page Header --}}
+<!-- Page-Title -->
+                        
+
+<div class="container">
+    <div class="row">
+                            <div class="col-sm-12">
+                                
+                                <h4 class="page-title">History</h4>
+                                <br>   
+
+                            </div>
+                        </div>
+<div class="row">
+
+        <div class="col-12">
+
+            <div class="portlet"><!-- /primary heading -->
+                <div class="portlet-heading">
+                    <h3 class="portlet-title text-dark text-uppercase">
+                        {{query}}
+                    </h3>
+                    <div class="portlet-widgets">
+                        <a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion1" href="#portlet2"><i class="ion-minus-round"></i></a>
+                        <span class="divider"></span>
+                        <a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="portlet2" class="panel-collapse collapse show">
+                    <div class="portlet-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mails m-0 table table-actions-bar">
+                                <thead>
+                                <tr>
+                                    {{!-- <th style="min-width: 95px;">
+                                        <div class="checkbox checkbox-primary checkbox-single m-r-15">
+                                            <input id="action-checkbox" type="checkbox">
+                                            <label for="action-checkbox"></label>
+                                        </div>                                                           
+                                    </th> --}}
+                                    <th>Company Name</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <!-- <th>Unit Cost</th> -->
+                                    <th style="min-width: 90px;">Action</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                    {{#if invoices}}
+                                       {{#each invoices}}
+                                            <tr class="active">
+                                                
+                                                <td>
+                                                    {{this.document.name}}
+                                                </td>
+
+                                                <td>
+                                                    {{this.document.grandTotal}}
+                                                </td>
+
+                                                <td>
+                                                    {{this.document.date}}
+                                                </td>
+                                                                                                        
+                                                <td>
+                                                    <a href="/user/view/{{this._id}}" class="table-action-btn"><i class="md md-pageview">view</i></a>
+                                                    {{!-- <a href="#" class="table-action-btn"><i class="md md-close"></i></a> --}}
+                                                </td>
+                                            </tr> 
+                                        {{/each}} 
+                                    {{/if}}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end col -->
+
+    </div>
+</div>
+           
+
+
+ 

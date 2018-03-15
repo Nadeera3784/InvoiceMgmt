@@ -1,0 +1,116 @@
+<div class="container" id="section-to-print">
+    <div class="row">
+    <div class="col-md-10">
+        <div class="card-box">
+            <!-- <div class="panel-heading">
+                <h4>Invoice</h4>
+            </div> -->
+            <div class="panel-body">
+                {{#if invoice}}
+                    <div class="clearfix">
+                    <div>
+                        <img src="/assets/images/charms.jpg" height="80" width="70" alt="CHARMS">                        
+                    </div>
+                    <span><b>CHARMS Resources Limited</b></span>
+                    <div class="pull-right">
+                        <h4 class="font-16">Company Name: {{invoice.name}} <br>
+                            <strong>Date: {{invoice.date}}</strong>
+                        </h4>
+                        <span>Invoice No: &nbsp<b>{{invoice.invoiceNo}}</b></span>
+                    </div>
+                </div>
+                <hr>
+            <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="pull-left m-t-30">
+                            <address>
+                                <strong>HEAD OFFICE</strong><br>
+                                #17 Kpalukwu Street, Oroworukwo Town<br>
+                                Port Harcourt<br>
+                                <abbr title="Phone">P:</abbr> 08033041714, 08038871841<br>
+                                08027387582, 0803875375
+                            </address>
+                        </div>
+                        <div class="pull-right m-t-30">
+                            <strong>BRANCH OFFICE</strong><br>
+                            #116/119 Technical Tools Line<br>
+                            Mile 3 Market, Port Harcourt
+                        </div>
+                    </div>
+                </div>
+                {{!-- <div class="m-h-50"></div> --}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table m-t-30" id="invoiceTable">
+                                <thead>
+                                <tr>                                                           
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Cost</th>
+                                    <th>Remarks</th>
+                                </tr></thead>
+                                <tbody>
+                                    {{!-- <tr><td>{{Invoice}}</td></tr> --}}
+                                    {{#each invoice.result}}
+                                    {{!-- {{#each this}} --}}
+                                            <tr><td>{{this.item}}</td><td>{{this.quantity}}</td><td>{{this.cost}}</td><td>{{this.remarks}}</td></tr>
+                                    {{!-- {{/each}} --}}
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 offset-md-9">
+                        <p class="text-right"><b>Sub-total:</b> {{invoice.subTotal}}</p>
+                        {{!-- <p class="text-right">Discout: 12.9%</p> --}}
+                        <p class="text-right">VAT(5%): {{invoice.vat}}</p>
+                        <hr>
+                        <Span>Grand-Total:</Span><h3 class="text-right">N {{invoice.grandTotal}}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    {{!-- <div class="col-md-5">
+                        <p class="text-t"><b>Received By:</b> <span>_________________________________</span></p>                       
+                        <hr>
+                        <p class="text-t"><b>Signature:</b> <span>___________________________________</span></p>                        
+                        <hr>
+                        <span><b>Date:</b> _________________________</span>
+                    </div> --}}
+                    {{!-- <div class="col-md-5 offset-2">
+                        <p class="text-t"><b>Delivered By:</b> <span id="deliverer">{{deliverer}}</span></p>                       
+                        <hr>
+                        
+                        <b>Date:&nbsp&nbsp</b><span>{{date}}</span>
+                    </div> --}}
+                </div>
+                <hr>
+                <div class="hidden-print">
+                    <div class="text-right">
+                        <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i>&nbsp&nbspPrint</a>
+                        <a href="/user/dashboard" class="btn btn-primary waves-effect waves-light">Back</a>
+                    </div>
+                </div>
+                {{else if error}}
+                <div class="clearfix">
+                    <p><b>{{error}}</b></p>
+                </div>
+                <hr>
+                <div class="hidden-print">
+                    <div class="text-right">
+                        <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i>&nbsp&nbspPrint</a>
+                        <a href="/user/dashboard" class="btn btn-primary waves-effect waves-light">Back</a>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</div>

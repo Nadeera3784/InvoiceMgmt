@@ -1,0 +1,161 @@
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        
+        <h4 class="page-title">New Invoice</h4>
+        <br>   
+    </div>
+</div>
+
+
+<!-- EDITABLE TABLE -->
+
+<div class="row">
+    <div class="col-md-12"  id="section-to-print">
+        <div class="card-box">
+            <div class="panel-body">
+                <div class="clearfix">
+                    <div>
+                        <img src="/assets/images/charms.jpg" height="80" width="70" alt="CHARMS">                        
+                    </div>
+                    <span><b>CHARMS Resources Limited</b></span>
+                    <div class="pull-right">
+                        Company name:&nbsp;<span class="font-16" id="invoiceName">Enter Name</span><br>
+                            {{!-- <strong>2015-04-23654789</strong><br> --}}
+                            <br>
+                        Date: &nbsp&nbsp<b><u><span class="font-16" id="date"></span></u></b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="pull-left m-t-30">
+                            <address>
+                                <strong>HEAD OFFICE</strong><br>
+                                #17 Kpalukwu Street, Oroworukwo Town<br>
+                                Port Harcourt<br>
+                                <abbr title="Phone">P:</abbr> 08033041714, 08038871841<br>
+                                08027387582, 0803875375
+                            </address>
+                        </div>
+                        <div class="pull-right m-t-30">
+                            <strong>BRANCH OFFICE</strong><br>
+                            #116/119 Technical Tools Line<br>
+                            Mile 3 Market, Port Harcourt
+                        </div>
+                    </div>
+                </div>
+                {{!-- <div class="m-h-50"></div> --}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table m-t-30" id="invoiceTable">
+                                <thead>
+                                <tr><th>Item</th>                                                            
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Cost</th>
+                                    <th>Remarks</th>
+                                </tr></thead>
+                                <tbody>                      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 offset-md-9">
+                        <p class="text-right"><b>Sub-total:</b> <span id="subT">0.0</span></p>
+                        {{!-- <p class="text-right">Discout: 12.9%</p> --}}
+                        <p class="text-right">VAT(5%): <span id="vat">0.0</span></p>
+                        <hr>
+                        <b>Grand-Total: </b><h2 class="text-right">N<span id="subT2">0.0</span></h2>
+                    </div>
+                </div>
+                <br>
+                <div class="row">                    
+                    <div class="col-sm-6">
+                        <p class="text-t"><b>Received By:</b> <span>__________________________</span></p>                       
+                        <hr>
+                        <p class="text-t"><b>Signature:</b> <span>__________________________</span></p>                        
+                        <hr>
+                        <span><b>Date:</b> ___________________</span>
+                    </div>
+                    {{!-- <div class="col-sm-6">
+                        <p class="text-t"><b>Delivered By:</b> <span id="deliverer"><u>__________________________</u></span></p>                       
+                        <hr>
+                        <p class="text-t"><b>Signature:</b><span>__________________________</span></p>                        
+                        <hr>
+                        <b>Date:&nbsp&nbsp<u><span class="font-16" id="date2"></span></u></b>
+                    </div> --}}
+                                      
+                </div>
+                <hr>
+                <div class="hidden-print">
+                    <div class="text-right">
+                        <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i>&nbsp&nbspPrint</a>&nbsp&nbsp
+                        <button class="btn btn-primary waves-effect waves-light" onclick="$.Notification.confirm('success','top right', 'Do you want to save invoice?!')">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+ <!-- END EDITABLE REGION -->
+
+
+ {{!-- Input Form --}}
+
+<div class="row">  
+    <div class="col-md-12">
+                                
+            <div class="card-box">
+                <div class="row">                                             
+                    <form class="form-inline" action="" method="POST">                
+                        <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-file-text"></i></span>                                                  
+                        <input type="text" class="form-control" id="description" placeholder="Description" required>
+                        </div>
+
+                        &nbsp&nbsp
+                        
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="quantity" placeholder="Quantity" required>
+                        {{!-- <select class="form-control" id="quantity">
+                            <option>Qty</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select> --}}
+                    </div>
+                    &nbsp&nbsp
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="unitCost" placeholder="Unit Cost" required>
+                    </div>
+                    &nbsp&nbsp
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="rem" placeholder="Remarks">
+                        </div>
+                    </div>                                   
+                        <button id="saveBtn" class="btn btn-primary btn-sm mb-2">Add</button>
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}" id="token">
+                       {{!-- <span>{{csrfToken}}</span> --}}
+                    </form>
+                </div>                                   
+        
+            </div>
+    </div>
+                        
+</div>
+<script>
+    var todayDate = new Date().toDateString()
+    document.getElementById("date").innerHTML = todayDate;
+    document.getElementById("date2").innerHTML = todayDate;
+</script>
+
