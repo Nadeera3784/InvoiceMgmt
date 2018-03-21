@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const { assert } = require('chai').assert;
+const assert = require('chai').assert;
 const httpMocks = require('node-mocks-http');
 // import controllers
 const createController = require('../../controllers/createController');
