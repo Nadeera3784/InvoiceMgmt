@@ -5,10 +5,26 @@ const router = express.Router();
 
 const passport = require('passport');
 const mongoose = require('mongoose');
-// var csrfProtect = csurf();
 
 // Import Model(s)
 const Invoice = require('../models/invoice');
+
+function createName(rsult) {
+  const companyNames = [];
+  let element;
+  for (let i = 0; i < rsult.length; i += 1) {
+    element = rsult[i].name.toUpperCase();
+    if (companyNames[i] === undefined) {
+      companyNames.push(element);
+    }
+    if (i > 0) {
+      if (companyNames.indexOf(element < 0)) {
+        companyNames.push(element);
+      }
+    }
+  }
+  return companyNames;
+}
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
@@ -54,8 +70,14 @@ router.get('/dashboard', isLoggedIn, (req, res, next) => {
       if (error) {
         next(error);
       }
+      const names = createName(result);
       // console.log(result);
-      return res.render('user/dashboard', { invoices: result, invoiceYears: years, csrfToken: req.csrfToken() });
+      return res.render('user/dashboard', {
+        invoices: result,
+        invoiceYears: years,
+        companies: names,
+        csrfToken: req.csrfToken(),
+      });
     });
   });
 });

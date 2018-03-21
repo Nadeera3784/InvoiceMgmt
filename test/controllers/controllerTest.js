@@ -1,8 +1,11 @@
+const sinon = require('sinon');
+const { assert } = require('chai').assert;
+const httpMocks = require('node-mocks-http');
 // import controllers
 const createController = require('../../controllers/createController');
-const assert = require('chai').assert;
-const httpMocks = require('node-mocks-http');
-
+// // import Model
+// const Invoice = require('mock-mongoose-model');
+const Invoice = require('../../models/invoice');
 
 describe('Controllers Test', () => {
   describe('Index Route', () => {
@@ -14,6 +17,23 @@ describe('Controllers Test', () => {
         done();
       });
       createController.get(req, res);
+    });
+  });
+  describe('Create Route', () => {
+    sinon.stub(Invoice, 'save').returns('Invoice Created');
+    const req = httpMocks.createRequest({ method: 'POST', url: '/' });
+    const res = { data: Invoice.save() };
+    beforeEach(() => {
+      sinon.stub(Invoice, 'save');
+    });
+    afterEach(() => {
+      Invoice.save.restore();
+    });
+
+    it('Should return Success on save', () => {
+      const expected = 'Invoice Created';
+      createController.post(req, res);
+      assert.equal(res.data, expected);
     });
   });
 });
