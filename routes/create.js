@@ -5,7 +5,7 @@ const router = express.Router();
 // Import Model(s)
 const Invoice = require('../models/invoice');
 // Import Controller
-const  create = require('../controllers/createController');
+const create = require('../controllers/createController');
 
 
 function isLoggedIn(req, res, next) {
