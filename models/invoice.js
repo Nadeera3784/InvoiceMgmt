@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const autoIncrement = require('mongoose-auto-increment');
 
-const Schema  = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 // Sub Documents
 const itemSchema = new Schema({
@@ -13,7 +13,7 @@ const schema = new Schema({
   name: 'String',
   created_by: 'String',
   subTotal: 'String',
-  grandTotal: 'String',
+  grandTotal: Number,
   vat: 'String',
   description: [itemSchema],
   quantity: [itemSchema],

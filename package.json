@@ -4,7 +4,7 @@
   "description": "Invoice Management System ",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "nodemon app.js",
     "test": "mocha test/**/*"
   },
   "author": "Bodwich Technology Solutions Limited",
@@ -40,6 +40,7 @@
     "mocha": "^5.0.4",
     "mock-mongoose-model": "^0.1.2",
     "node-mocks-http": "^1.5.8",
+    "nodemon": "^1.17.2",
     "sinon": "^4.4.6"
   },
   "pkg": {

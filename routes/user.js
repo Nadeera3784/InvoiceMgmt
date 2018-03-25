@@ -9,21 +9,96 @@ const mongoose = require('mongoose');
 // Import Model(s)
 const Invoice = require('../models/invoice');
 
-function createName(rsult) {
-  const companyNames = [];
+function sumTotal(Model, data, res, cb) {
+  let sum;
+  // console.log(parseInt(data.year, 10));
+
+  Model.aggregate([
+
+    {
+      $project: {
+        year: { $year: '$created_at' },
+        month: { $month: '$created_at' },
+        grandTotal: 1,
+      },
+    },
+    {
+      $match: {
+        year: parseInt(data.year, 10),
+        month: parseInt(data.month, 10),
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: '$grandTotal' },
+      },
+    },
+
+  ], (err, record) => {
+    if (err) {
+      throw err;
+    }
+    if (record[0] === undefined) {
+      return cb('No records found');
+    }
+    sum = record[0].total;
+    return cb(sum);
+    // return res.send(JSON.stringify(sum));
+  });
+}
+
+function sumTotalYear(Model, data, res, cb) {
+  let sum;
+  // console.log(parseInt(data.year, 10));
+
+  Model.aggregate([
+
+    {
+      $project: {
+        year: { $year: '$created_at' },
+        grandTotal: 1,
+      },
+    },
+    {
+      $match: {
+        year: parseInt(data.year, 10),
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: '$grandTotal' },
+      },
+    },
+
+  ], (err, record) => {
+    if (err) {
+      throw err;
+    }
+    if (record[0] === undefined) {
+      return cb('No records found');
+    }
+    sum = record[0].total;
+    return cb(sum);
+    // return res.send(JSON.stringify(sum));
+  });
+}
+
+function createName(rsult, req, res, years) {
+  const companyNames = new Set();
   let element;
   for (let i = 0; i < rsult.length; i += 1) {
-    element = rsult[i].name.toUpperCase();
-    if (companyNames[i] === undefined) {
-      companyNames.push(element);
-    }
-    if (i > 0) {
-      if (companyNames.indexOf(element < 0)) {
-        companyNames.push(element);
-      }
-    }
+    element = rsult[i].name;
+    companyNames.add(element);
   }
-  return companyNames;
+  // return { names: Array.from(companyNames), total };
+  return res.render('user/dashboard', {
+    invoices: rsult,
+    invoiceYears: years,
+    companies: Array.from(companyNames),
+    csrfToken: req.csrfToken(),
+  });
 }
 
 function isLoggedIn(req, res, next) {
@@ -70,14 +145,7 @@ router.get('/dashboard', isLoggedIn, (req, res, next) => {
       if (error) {
         next(error);
       }
-      const names = createName(result);
-      // console.log(result);
-      return res.render('user/dashboard', {
-        invoices: result,
-        invoiceYears: years,
-        companies: names,
-        csrfToken: req.csrfToken(),
-      });
+      return createName(result, req, res, years);
     });
   });
 });
@@ -87,7 +155,7 @@ router.get('/dashboard', isLoggedIn, (req, res, next) => {
 
 // Get Invoice Detail View
 router.get('/view/:id', isLoggedIn, (req, res, next) => {
-  const { id } = req.params.id;
+  const id = req.params.id;
   Invoice.findById(mongoose.Types.ObjectId(id), (err, result) => {
     if (err) {
       return next(err);
@@ -231,10 +299,58 @@ router.get('/view/:year/:month', isLoggedIn, (req, res, next) => {
 
       // console.log(data);
       // console.log(result);
-      return res.render('user/history', { invoiceYears: data, invoices: result, query: `${searchQuery[req.params.month]} ${req.params.year}` });
+      return res.render(
+        'user/history',
+        {
+          invoiceYears: data,
+          invoices: result,
+          query: `${searchQuery[req.params.month]} ${req.params.year}`,
+        },
+      );
     });
   });
 });
+
+
+/* Search invoices by year */
+router.get('/list/:name', isLoggedIn, (req, res, next) => {
+  Invoice.find({ name: req.params.name }, (err, result) => {
+    if (err) {
+      next(err);
+    }
+    Invoice.aggregate([
+      {
+        $group:
+            {
+              _id: { year: { $year: '$created_at' } },
+              // invoiceID: { $addToSet: "$_id" }
+            },
+      },
+      {
+        $sort:
+            {
+              _id: 1,
+            },
+      },
+
+    ], (error, data) => {
+      if (error) {
+        next(error);
+      }
+
+      // console.log(data);
+      // console.log(result);
+      return res.render(
+        'user/list',
+        {
+          invoiceYears: data,
+          invoices: result,
+        },
+      );
+    });
+  });
+});
+
 
 /* GET signup page */
 router.get('/signup', (req, res) => {
@@ -279,6 +395,55 @@ router.get('/logout', isLoggedIn, (req, res) => {
   req.logout();
   res.redirect('/');
 });
+
+/** GET Total  */
+router.get('/total', isLoggedIn, (req, res) => {
+  Invoice.aggregate([
+    {
+      $group:
+          {
+            _id: { year: { $year: '$created_at' } },
+            // invoiceID: { $addToSet: "$_id" }
+          },
+    },
+    {
+      $sort:
+          {
+            _id: 1,
+          },
+    },
+  ], (err, years) => {
+    res.render('user/checkTotals', {
+      years,
+      csrfToken: req.csrfToken(),
+    });
+  });
+});
+
+/** POST Total  */
+router.post('/total', isLoggedIn, (req, res) => {
+  const data = req.body;
+  // console.log(data);
+  JSON.stringify(data);
+  // sumTotal(Invoice, data, res);
+  sumTotal(Invoice, data, res, (dataSum) => {
+    // console.log(dataSum);
+    res.send(JSON.stringify(dataSum));
+  });
+});
+
+/** POST Total Year  */
+router.post('/total/year', isLoggedIn, (req, res) => {
+  const data = req.body;
+  // console.log(data);
+  JSON.stringify(data);
+  // sumTotal(Invoice, data, res);
+  sumTotalYear(Invoice, data, res, (dataSum) => {
+    // console.log(dataSum);
+    res.send(JSON.stringify(dataSum));
+  });
+});
+
 
 module.exports = router;
 

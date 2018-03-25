@@ -14,7 +14,7 @@ const createInvoice = {
     const invoice = new Invoice({
       name: data.name,
       subTotal: data.subTotal,
-      grandTotal: data.grandTotal,
+      grandTotal: parseInt(data.grandTotal, 10),
       vat: data.vat,
       created_by: req.user.username,
       date: data.date,
