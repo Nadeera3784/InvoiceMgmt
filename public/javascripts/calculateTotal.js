@@ -7,6 +7,11 @@ $(document).ready(() => {
     document.getElementById('sumValue').innerHTML = `${data}`;
   }
 
+  function showYear(data) {
+    // $.Notification.notify('custom', 'top center', data);
+    document.getElementById('sumValue2').innerHTML = `${data}`;
+  }
+
   $('#totalBtn').on('click', () => {
     if ($('#year').prop('selectedIndex' || $('#month').prop('selectedIndex')) <= 0) {
       return alert('Please Select Year & Month');
@@ -29,13 +34,14 @@ $(document).ready(() => {
     });
   });
 
-  $('#totalBtnYear').on('click', () => {
-    if ($('#year').prop('selectedIndex') <= 0) {
+  $('#totalBtnyear').on('click', () => {
+    if ($('#year2').prop('selectedIndex') <= 0) {
       return alert('Please Select Year');
     }
+    console.log($('#year2').prop('selectedIndex'));
 
     const payload = {
-      year: $('#year').val(),
+      year: $('#year2').val(),
       _csrf: $('#token').val(),
     };
 
@@ -43,7 +49,7 @@ $(document).ready(() => {
       type: 'POST',
       url: 'http://localhost:3000/user/total/year',
       data: JSON.stringify(payload),
-      success: showTotal,
+      success: showYear,
       // headers: {'_csrf': token}
       dataType: 'json',
       contentType: 'application/json',

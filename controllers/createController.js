@@ -1,7 +1,6 @@
 // Import Model(s)
 // const Invoice = require('../models/invoice');
 
-
 // MiddleWare for invoice creation
 const createInvoice = {
   get: (req, res, token) => {

@@ -9,152 +9,77 @@ const mongoose = require('mongoose');
 // Import Model(s)
 const Invoice = require('../models/invoice');
 
-function sumTotal(Model, data, res, cb) {
-  let sum;
-  // console.log(parseInt(data.year, 10));
+// Import auth middleware
+const auth = require('../middleware/authHelpers');
 
-  Model.aggregate([
+// Import helper middleware
+const { createName, sumTotal, sumYear } = require('../middleware/totalHelpers');
 
-    {
-      $project: {
-        year: { $year: '$created_at' },
-        month: { $month: '$created_at' },
-        grandTotal: 1,
-      },
-    },
-    {
-      $match: {
-        year: parseInt(data.year, 10),
-        month: parseInt(data.month, 10),
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        total: { $sum: '$grandTotal' },
-      },
-    },
-
-  ], (err, record) => {
-    if (err) {
-      throw err;
-    }
-    if (record[0] === undefined) {
-      return cb('No records found');
-    }
-    sum = record[0].total;
-    return cb(sum);
-    // return res.send(JSON.stringify(sum));
-  });
-}
-
-function sumTotalYear(Model, data, res, cb) {
-  let sum;
-  // console.log(parseInt(data.year, 10));
-
-  Model.aggregate([
-
-    {
-      $project: {
-        year: { $year: '$created_at' },
-        grandTotal: 1,
-      },
-    },
-    {
-      $match: {
-        year: parseInt(data.year, 10),
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        total: { $sum: '$grandTotal' },
-      },
-    },
-
-  ], (err, record) => {
-    if (err) {
-      throw err;
-    }
-    if (record[0] === undefined) {
-      return cb('No records found');
-    }
-    sum = record[0].total;
-    return cb(sum);
-    // return res.send(JSON.stringify(sum));
-  });
-}
-
-function createName(rsult, req, res, years) {
-  const companyNames = new Set();
-  let element;
-  for (let i = 0; i < rsult.length; i += 1) {
-    element = rsult[i].name;
-    companyNames.add(element);
-  }
-  // return { names: Array.from(companyNames), total };
-  return res.render('user/dashboard', {
-    invoices: rsult,
-    invoiceYears: years,
-    companies: Array.from(companyNames),
-    csrfToken: req.csrfToken(),
-  });
-}
-
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  return res.redirect('/user/login');
-}
-
-function notLoggedIn(req, res, next) {
-  if (!req.isAuthenticated()) {
-    return next();
-  }
-  return res.redirect('/user/dashboard');
-}
+const dash = require('../middleware/userMiddleware');
 
 
 /* GET home page. */
-router.get('/', notLoggedIn, (req, res) => {
+router.get('/', auth.notLoggedIn, (req, res) => {
   res.render('index', { layout: 'auth' });
 });
 
 /* GET home page. */
-router.get('/dashboard', isLoggedIn, (req, res, next) => {
-  Invoice.aggregate([
-    {
-      $group:
-          {
-            _id: { year: { $year: '$created_at' } },
+router.get('/dashboard', auth.isLoggedIn, async (req, res, next) => {
+  let years;
+  let result;
+  try {
+    result = await Invoice.find();
+    years = await Invoice.aggregate([
+      {
+        $group:
+            {
+              _id: { year: { $year: '$created_at' } },
             // invoiceID: { $addToSet: "$_id" }
-          },
-    },
-    {
-      $sort:
-          {
-            _id: 1,
-          },
-    },
-  ], (err, years) => {
-    if (err) {
-      next(err);
-    }
-    Invoice.find((error, result) => {
-      if (error) {
-        next(error);
-      }
-      return createName(result, req, res, years);
-    });
-  });
-});
+            },
+      },
+      {
+        $sort:
+            {
+              _id: 1,
+            },
+      },
+    ]);
+  } catch (err) {
+    next(err);
+  }
 
-// router.use(csrfProtect);
+  return createName(result, req, res, years);
+
+  // Invoice.aggregate([
+  //   {
+  //     $group:
+  //         {
+  //           _id: { year: { $year: '$created_at' } },
+  //           // invoiceID: { $addToSet: "$_id" }
+  //         },
+  //   },
+  //   {
+  //     $sort:
+  //         {
+  //           _id: 1,
+  //         },
+  //   },
+  // ], (err, years) => {
+  //   if (err) {
+  //     next(err);
+  //   }
+  //   Invoice.find((error, result) => {
+  //     if (error) {
+  //       next(error);
+  //     }
+  //     return createName(result, req, res, years);
+  //   });
+  // });
+});
 
 
 // Get Invoice Detail View
-router.get('/view/:id', isLoggedIn, (req, res, next) => {
+router.get('/view/:id', auth.isLoggedIn, (req, res, next) => {
   const id = req.params.id;
   Invoice.findById(mongoose.Types.ObjectId(id), (err, result) => {
     if (err) {
@@ -193,7 +118,7 @@ router.get('/view/:id', isLoggedIn, (req, res, next) => {
 
 
 // Search Invoice Detail View
-router.post('/search', isLoggedIn, (req, res) => {
+router.post('/search', auth.isLoggedIn, (req, res) => {
   const id = parseInt(req.body.id, 10);
   // console.log(id);
   Invoice.findOne({ invoiceId: id }, (err, result) => {
@@ -237,7 +162,7 @@ router.post('/search', isLoggedIn, (req, res) => {
   });
 });
 
-router.get('/view/:year/:month', isLoggedIn, (req, res, next) => {
+router.get('/view/:year/:month', auth.isLoggedIn, (req, res, next) => {
   // var year = req.params.year;
   // var month = req.params.month;
 
@@ -313,7 +238,7 @@ router.get('/view/:year/:month', isLoggedIn, (req, res, next) => {
 
 
 /* Search invoices by year */
-router.get('/list/:name', isLoggedIn, (req, res, next) => {
+router.get('/list/:name', auth.isLoggedIn, (req, res, next) => {
   Invoice.find({ name: req.params.name }, (err, result) => {
     if (err) {
       next(err);
@@ -373,7 +298,7 @@ router.post('/signup', passport.authenticate('local.signup', {
 
 
 /* GET login page */
-router.get('/login', notLoggedIn, (req, res) => {
+router.get('/login', auth.notLoggedIn, (req, res) => {
   const msgs = req.flash('error');
   return res.render('user/login', {
     csrfToken: req.csrfToken(),
@@ -384,20 +309,20 @@ router.get('/login', notLoggedIn, (req, res) => {
 });
 
 /* POST login page */
-router.post('/login', notLoggedIn, passport.authenticate('local.signin', {
+router.post('/login', auth.notLoggedIn, passport.authenticate('local.signin', {
   successRedirect: '/user/dashboard',
   failureRedirect: '/user/login',
   failureFlash: true,
 }));
 
 /** Logout  */
-router.get('/logout', isLoggedIn, (req, res) => {
+router.get('/logout', auth.isLoggedIn, (req, res) => {
   req.logout();
   res.redirect('/');
 });
 
 /** GET Total  */
-router.get('/total', isLoggedIn, (req, res) => {
+router.get('/total', auth.isLoggedIn, (req, res) => {
   Invoice.aggregate([
     {
       $group:
@@ -421,7 +346,7 @@ router.get('/total', isLoggedIn, (req, res) => {
 });
 
 /** POST Total  */
-router.post('/total', isLoggedIn, (req, res) => {
+router.post('/total', auth.isLoggedIn, (req, res, next) => {
   const data = req.body;
   // console.log(data);
   JSON.stringify(data);
@@ -433,12 +358,12 @@ router.post('/total', isLoggedIn, (req, res) => {
 });
 
 /** POST Total Year  */
-router.post('/total/year', isLoggedIn, (req, res) => {
+router.post('/total/year', auth.isLoggedIn, (req, res, next) => {
   const data = req.body;
   // console.log(data);
   JSON.stringify(data);
   // sumTotal(Invoice, data, res);
-  sumTotalYear(Invoice, data, res, (dataSum) => {
+  sumYear(Invoice, data, res, (dataSum) => {
     // console.log(dataSum);
     res.send(JSON.stringify(dataSum));
   });
