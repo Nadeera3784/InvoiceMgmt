@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(validator());
 app.use(cookieParser());
-app.use(session({ saveUninitialized: false, resave: false, secret: 'xaxbczczaaxx#213._+@__..000xxx' }));
+app.use(session({ saveUninitialized: false, resave: false, secret: process.env.SECRET_KEY }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
