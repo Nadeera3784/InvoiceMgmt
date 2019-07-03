@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-// const csurf = require('csurf');
 
 const passport = require('passport');
 const mongoose = require('mongoose');
