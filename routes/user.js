@@ -49,32 +49,7 @@ router.get('/dashboard', auth.isLoggedIn, async (req, res, next) => {
   }
 
   return createName(result, req, res, years);
-
-  // Invoice.aggregate([
-  //   {
-  //     $group:
-  //         {
-  //           _id: { year: { $year: '$created_at' } },
-  //           // invoiceID: { $addToSet: "$_id" }
-  //         },
-  //   },
-  //   {
-  //     $sort:
-  //         {
-  //           _id: 1,
-  //         },
-  //   },
-  // ], (err, years) => {
-  //   if (err) {
-  //     next(err);
-  //   }
-  //   Invoice.find((error, result) => {
-  //     if (error) {
-  //       next(error);
-  //     }
-  //     return createName(result, req, res, years);
-  //   });
-  // });
+  
 });
 
 
@@ -95,8 +70,6 @@ router.get('/view/:id', auth.isLoggedIn, (req, res, next) => {
         remarks: result.remarks[i].value,
       };
     }
-    // console.log(resultArr);
-    // created_at: 'String'
     return res.render(
       'user/invView',
       {
@@ -140,7 +113,7 @@ router.post('/search', auth.isLoggedIn, (req, res) => {
           remarks: result.remarks[i].value,
         };
       }
-      // created_at: 'String'
+     
 
       res.render(
         'user/invView',
@@ -163,8 +136,7 @@ router.post('/search', auth.isLoggedIn, (req, res) => {
 });
 
 router.get('/view/:year/:month', auth.isLoggedIn, (req, res, next) => {
-  // var year = req.params.year;
-  // var month = req.params.month;
+ 
 
   const searchQuery = {
     1: 'January',
@@ -207,7 +179,7 @@ router.get('/view/:year/:month', auth.isLoggedIn, (req, res, next) => {
         $group:
             {
               _id: { year: { $year: '$created_at' } },
-              // invoiceID: { $addToSet: "$_id" }
+             
             },
       },
       {
@@ -221,9 +193,7 @@ router.get('/view/:year/:month', auth.isLoggedIn, (req, res, next) => {
       if (error) {
         next(error);
       }
-
-      // console.log(data);
-      // console.log(result);
+      
       return res.render(
         'user/history',
         {
@@ -248,7 +218,6 @@ router.get('/list/:name', auth.isLoggedIn, (req, res, next) => {
         $group:
             {
               _id: { year: { $year: '$created_at' } },
-              // invoiceID: { $addToSet: "$_id" }
             },
       },
       {
@@ -262,9 +231,6 @@ router.get('/list/:name', auth.isLoggedIn, (req, res, next) => {
       if (error) {
         next(error);
       }
-
-      // console.log(data);
-      // console.log(result);
       return res.render(
         'user/list',
         {
@@ -328,7 +294,6 @@ router.get('/total', auth.isLoggedIn, (req, res) => {
       $group:
           {
             _id: { year: { $year: '$created_at' } },
-            // invoiceID: { $addToSet: "$_id" }
           },
     },
     {
@@ -348,11 +313,8 @@ router.get('/total', auth.isLoggedIn, (req, res) => {
 /** POST Total  */
 router.post('/total', auth.isLoggedIn, (req, res, next) => {
   const data = req.body;
-  // console.log(data);
   JSON.stringify(data);
-  // sumTotal(Invoice, data, res);
   sumTotal(Invoice, data, res, (dataSum) => {
-    // console.log(dataSum);
     res.send(JSON.stringify(dataSum));
   });
 });
@@ -360,11 +322,8 @@ router.post('/total', auth.isLoggedIn, (req, res, next) => {
 /** POST Total Year  */
 router.post('/total/year', auth.isLoggedIn, (req, res, next) => {
   const data = req.body;
-  // console.log(data);
   JSON.stringify(data);
-  // sumTotal(Invoice, data, res);
   sumYear(Invoice, data, res, (dataSum) => {
-    // console.log(dataSum);
     res.send(JSON.stringify(dataSum));
   });
 });
