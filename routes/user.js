@@ -34,7 +34,6 @@ router.get('/dashboard', auth.isLoggedIn, async (req, res, next) => {
         $group:
             {
               _id: { year: { $year: '$created_at' } },
-            // invoiceID: { $addToSet: "$_id" }
             },
       },
       {
@@ -93,14 +92,11 @@ router.get('/view/:id', auth.isLoggedIn, (req, res, next) => {
 // Search Invoice Detail View
 router.post('/search', auth.isLoggedIn, (req, res) => {
   const id = parseInt(req.body.id, 10);
-  // console.log(id);
   Invoice.findOne({ invoiceId: id }, (err, result) => {
     if (err) {
-      // return console.log(err);
       return res.render('user/invView', { layout: 'search', error: err });
     }
     if (result == null) {
-      // console.log(result);
       return res.render('user/invView', { layout: 'search', error: 'Invoice not Found' });
     }
     if (result != null) {
